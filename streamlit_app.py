@@ -15,7 +15,9 @@ openai.api_key = st.secrets["OPEN_AI_KEY"]
 
 @st.cache_resource(show_spinner=False)
 def load_data():
-    df = pd.read_csv("medical_data_cleaned.csv")
+    df = pd.read_csv("Diseases_Symptoms.csv", dtype=str)
+    df['desease_info'] = 'Name: ' + df['Name'] + ', Symptoms: ' + df['Symptoms'] + ', Treatments: ' + df['Treatments'] + ', Contagious: ' + df['Contagious'] + ', Chronic: ' + df['Chronic']
+    df = df.dropna(subset=['desease_info'])
     emb_matrix = np.load("embeddings.npy")
 
     index = faiss.IndexFlatL2(emb_matrix.shape[1])
@@ -40,7 +42,7 @@ Just describe your symptoms and the assistant will suggest a likely condition ba
 # --------------------------
 st.header("📊 Data Overview")
 st.write("Here are a few example entries from the dataset:")
-st.dataframe(df[['symptoms', 'diagnosis', 'treatment']].sample(5), use_container_width=True)
+st.dataframe(df[['Name', 'Symptoms', 'Treatments']].sample(5), use_container_width=True)
 
 # --------------------------
 # UI SECTION 3: Chat Assistant
