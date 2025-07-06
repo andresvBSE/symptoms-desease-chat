@@ -1,48 +1,35 @@
-# 🎈 Blank app template
+# 🩺 Symptom Checker Assistant (Streamlit + GPT-3.5 + RAG)
 
-A simple Streamlit app template for you to modify!
+## 📘 Introduction
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+This is an interactive medical assistant built with **Streamlit** that uses **OpenAI's GPT-3.5** and **Retrieval-Augmented Generation (RAG)** to help users match their described symptoms with possible **diagnoses and treatments**.
 
+The app uses:
+- **A local medical dataset** of symptoms, diagnoses, and treatments
+- **OpenAI’s `text-embedding-ada-002`** to perform semantic search
+- **FAISS** for fast document retrieval
+- **GPT-4** for generating grounded medical suggestions
+- **Streamlit Chat UI** for a conversational experience
 
-This Streamlit app combines **OpenAI's GPT-4** with **retrieval-augmented generation (RAG)** to provide grounded medical suggestions based on symptom descriptions. It uses a local CSV dataset of symptoms, diagnoses, and treatments.
+> ⚠️ **Disclaimer:** This app is for educational/demo purposes and does not provide professional medical advice.
 
-## 💡 What It Does
+---
 
-- Accepts a natural-language symptom description (e.g., "I feel dizzy and my joints hurt").
-- Uses OpenAI’s `text-embedding-ada-002` to embed the user query.
-- Retrieves the most semantically similar cases from the dataset using **FAISS**.
-- Generates an answer using **GPT-4**, grounded in the retrieved data.
+## 💬 Example
 
-## 🔍 Dataset
+After launching the app, a user might enter:
 
-The app expects a file named `medical_data.csv` with the following columns:
+> **"I have a constant knee pain and limited mobility"**
 
-- `symptoms`
-- `diagnosis`
-- `treatment`
+The assistant might respond with:
 
-Each row describes a known medical case.
+> _"Your symptoms may be consistent with osteoarthritis or a related joint condition. It is typically managed with physical therapy, NSAIDs, and in some cases, joint injections. Please consult a healthcare provider for a diagnosis."_
 
-## 🚀 How to Run
+---
 
-1. Install dependencies:
+## 📦 Prerequisites
+
+1. **Install dependencies**
 
 ```bash
 pip install -r requirements.txt
-
-
-
-### How to run it on your own machine
-
-1. Install the requirements
-
-   ```
-   $ pip install -r requirements.txt
-   ```
-
-2. Run the app
-
-   ```
-   $ streamlit run streamlit_app.py
-   ```
