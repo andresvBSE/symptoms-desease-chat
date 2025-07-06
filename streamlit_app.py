@@ -42,20 +42,8 @@ Just describe your symptoms and the assistant will suggest a likely condition ba
 # --------------------------
 st.header("📊 Data Overview")
 st.write("Here are a few example entries from the dataset:")
-st.dataframe(df[['Name', 'Symptoms', 'Treatments']].sample(5), use_container_width=True)
+st.dataframe(df[['Name', 'Symptoms', 'Treatments']].head(6), use_container_width=True)
 
-# --------------------------
-# UI SECTION 3: Chat Assistant
-# --------------------------
-st.header("💬 Ask the Assistant")
-example_queries = [
-    "I have a constant knee pain, and limited mobility",
-    "I feel vertigo and loss hearing. What do I have?",
-    "I have high fever, headache, and joint pain"
-]
-st.markdown("Examples: " + " | ".join(f'"{q}"' for q in example_queries))
-
-user_input = st.text_area("Describe your symptoms:", height=100)
 
 def retrieve_top_docs(query, k=3):
     query_embedding = openai.Embedding.create(input=[query], model="text-embedding-ada-002")["data"][0]["embedding"]
@@ -83,8 +71,29 @@ Based on the context, suggest the most likely condition and appropriate treatmen
     )
     return response["choices"][0]["message"]["content"]
 
-if user_input:
-    with st.spinner("Thinking..."):
-        answer = generate_response(user_input)
-        st.markdown("### 🧠 Assistant Response")
-        st.write(answer)
+# --------------------------
+# Session State for Chat
+# --------------------------
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Hello! Describe your symptoms and I’ll suggest possible conditions and treatments. For example: “I have a constant knee pain” or “I feel vertigo and hearing loss.”"}
+    ]
+
+# Display past messages
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# Chat input (Streamlit’s chat UI)
+if prompt := st.chat_input("Enter your symptoms here..."):
+    # Store user message
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # Generate and store assistant response
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            response = generate_response(prompt)
+            st.markdown(response)
+    st.session_state.messages.append({"role": "assistant", "content": response})
